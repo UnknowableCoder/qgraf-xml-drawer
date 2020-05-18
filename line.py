@@ -39,12 +39,12 @@ class Line:
     def __len__(self):
         len(self.vertices)
     def __contains__(self,v):
-        print ""
-        print "trying to see if"
-        print v.fields
-        print "is connected to"
+        print("")
+        print("trying to see if")
+        print(v.fields)
+        print("is connected to")
         for w in self.vertices:
-            print w.fields
+            print(w.fields)
         contained = False
         for w in self.vertices:
             try:

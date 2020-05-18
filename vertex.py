@@ -19,9 +19,12 @@ class Vertex:
             self.id=element.find("id").text
             for i in range(0,len(self.fields)):
                 if int(self.fields[i])<0:
-                    self.fields[i]="ext"+str(-int(self.fields[i]))
+                    if(int(self.fields[i]) % 2 == 0):
+                        self.fields[i]="out"+str(-int(self.fields[i]))
+                    else:
+                        self.fields[i]="in"+str(-int(self.fields[i]))
         except:
-            print "Error while defining vertex object"
+            print("Error while defining vertex object")
 
     def openline(self,file,line):
         "print opening the line"
@@ -31,13 +34,13 @@ class Vertex:
             if int(self.fields[0].split("t")[1])%2 == 1: # a general code should put vbar here
                 file.write("*(g_({},{})-m{})".format(line,self.momenta[0],self.types[0].split("bar")[0]))
         else:
-            print "this vertex does no seem to contain a psibar !"
+            print("this vertex does no seem to contain a psibar !")
 
     def writenextprop(self,file,line=1):
         if not (self.types[1] in ["t","b"]):
-            print "No fermion coming out of this vertex ! Something is wrong."
+            print("No fermion coming out of this vertex ! Something is wrong.")
         elif re.search('[a-zA-Z]',self.fields[1]):
-            print "This this the end of the line !"
+            print("This this the end of the line !")
             if int(self.fields[1].split("t")[1])%2==1:
                 file.write("(g_({},{})+m{})".format(line,self.momenta[1],self.types[1]))
             if int(self.fields[1].split("t")[1])%2==0:
@@ -97,5 +100,5 @@ class Vertex:
             file.write(" +f(b{},b{},bdummy)*f(b{},b{},bdummy)*(d_(mu{},mu{})*d_(mu{},mu{})-d_(mu{},mu{})*d_(mu{},mu{}))".format(i,l,j,k,i,j,k,l,i,k,j,l))
             file.write(")")
         else:
-            print "ERROR: Unknown vertex type"
-            print self.type
+            print("ERROR: Unknown vertex type")
+            print(self.type)

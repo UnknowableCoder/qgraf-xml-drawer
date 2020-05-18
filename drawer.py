@@ -5,23 +5,54 @@ import sys
 from propagator import *
 from vertex import *
 from copy import copy
+from extra_translation import *
 
-INPUT="grafs" #QGRAF output file
+INPUT="out" #QGRAF output file
+
 graphs=XML(default_loader(INPUT,parse))
 diagrams=graphs.find("diagrams")
 
 #Particle dictionnary. Adapt this to your model
-pt = {"g": "gluon", "t": "fermion", "tbar": "fermion","H": "scalar"}
+pt = {"H": "scalar",
+      "eCARETMINUS": "fermion",
+      "eCARETPLUS": "anti fermion",
+      "BACKSLASHmuCARETMINUS": "fermion",
+      "BACKSLASHmuCARETPLUS": "anti fermion",
+      "BACKSLASHtauCARETMINUS": "fermion",
+      "BACKSLASHtauCARETPLUS": "anti fermion",
+      "BACKSLASHnu_e": "fermion",
+      "BACKSLASHoverlineCURLYLBACKSLASHnu_BACKSLASHeCURLYR": "anti fermion",
+      "BACKSLASHnu_BACKSLASHmu": "fermion",
+      "BACKSLASHoverlineCURLYLBACKSLASHnu_BACKSLASHmuCURLYR": "anti fermion",
+      "BACKSLASHnu_BACKSLASHtau": "fermion",
+      "BACKSLASHoverlineCURLYLBACKSLASHnu_BACKSLASHtauCURLYR": "antifermion",
+      "u": "fermion",
+      "BACKSLASHoverlineCURLYLuCURLYR": "anti fermion",
+      "c": "fermion",
+      "BACKSLASHoverlineCURLYLcCURLYR": "anti fermion",
+      "t": "fermion",
+      "BACKSLASHoverlineCURLYLtCURLYR": "anti fermion",
+      "d": "fermion",
+      "BACKSLASHoverlineCURLYLdCURLYR": "anti fermion",
+      "s": "fermion",
+      "BACKSLASHoverlineCURLYLsCURLYR": "anti fermion",
+      "b": "fermion",
+      "BACKSLASHoverlineCURLYLbCURLYR": "anti fermion",
+      "BACKSLASHgamma": "photon",
+      "WCARETMINUS": "photon",
+      "WCARETPLUS": "photon",
+      "Z": "photon",
+      "g": "gluon"}
 
 
 file = open("diagrams.tex","w+")
 
-for diagram in diagrams.getchildren():
+for diagram in list(diagrams):
     DiagID = diagram.find("id").text
-    print "Doing diagram: "+DiagID
-    file.write(DiagID+"~\\feynmandiagram[small]{\n")
-    NOpropagators=diagram.find("propagators").getchildren()
-    NOvertices=diagram.find("vertices").getchildren()
+    print("Doing diagram: "+DiagID)
+    file.write(DiagID+"~\\feynmandiagram[small, horizontal = in1 to out2, tree layout]{\n")
+    NOpropagators=list(diagram.find("propagators"))
+    NOvertices=list(diagram.find("vertices"))
     propagators=[]
     for p in NOpropagators:
         propagators.append(propagator(p))
@@ -34,7 +65,7 @@ for diagram in diagrams.getchildren():
             found = False
             for b in bundles:
                 if p.fromto == b[0].fromto:
-                    print "adding my propagator to an existing bundle"
+                    print("adding my propagator to an existing bundle")
                     b.append(p)
                     found = True
                     break
@@ -71,15 +102,19 @@ for diagram in diagrams.getchildren():
                 b[1].texprint(file,pt,shapedict[0])
             b[2].texprint(file,pt)
         if len(b)>4:
-            print "I don't know how to deal with this !"
+            print("I don't know how to deal with this !")
             raise ValueError('Too many propagators in a bundle')
 
     for v in vertices:
         for i in range(len(v.fields)):
             if re.search('[a-zA-Z]',v.fields[i]):
-                file.write("{} [particle={}] -- [{}] {},\n".format(v.fields[i],v.fields[i],pt[v.types[i]],v.id))
+                if i < len(v.fields)-1:
+                    file.write("{} [particle={}] -- [{}] {}\n".format(v.fields[i],extra_translate(v.types[i]),pt[v.types[i]],v.id))
+                else:
+                    file.write("{} [particle={}] -- [{}] {},\n".format(v.fields[i],extra_translate(v.types[i]),pt[v.types[i]],v.id))
+  
 #
 #    file.write("ext1 -- [opacity = 0] mid,\n") add a comma above !
 #    file.write("ext3 -- [opacity = 0] mid\n")
-    file.write("q -- [opacity = 0] q\n")
+#    file.write("q -- [opacity = 0] q {}\n".format(len(v.fields)))
     file.write("};\n")
