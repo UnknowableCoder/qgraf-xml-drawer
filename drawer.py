@@ -21,7 +21,7 @@ pt = {"H": "scalar",
       "BACKSLASHtauCARETMINUS": "fermion",
       "BACKSLASHtauCARETPLUS": "anti fermion",
       "BACKSLASHnu_e": "fermion",
-      "BACKSLASHoverlineCURLYLBACKSLASHnu_BACKSLASHeCURLYR": "anti fermion",
+      "BACKSLASHoverlineCURLYLBACKSLASHnu_eCURLYR": "anti fermion",
       "BACKSLASHnu_BACKSLASHmu": "fermion",
       "BACKSLASHoverlineCURLYLBACKSLASHnu_BACKSLASHmuCURLYR": "anti fermion",
       "BACKSLASHnu_BACKSLASHtau": "fermion",
@@ -109,9 +109,9 @@ for diagram in list(diagrams):
         for i in range(len(v.fields)):
             if re.search('[a-zA-Z]',v.fields[i]):
                 if i < len(v.fields)-1:
-                    file.write("{} [particle={}] -- [{}] {}\n".format(v.fields[i],extra_translate(v.types[i]),pt[v.types[i]],v.id))
-                else:
                     file.write("{} [particle={}] -- [{}] {},\n".format(v.fields[i],extra_translate(v.types[i]),pt[v.types[i]],v.id))
+                else:
+                    file.write("{} [particle={}] -- [{}] {}\n".format(v.fields[i],extra_translate(v.types[i]),pt[v.types[i]],v.id))
   
 #
 #    file.write("ext1 -- [opacity = 0] mid,\n") add a comma above !
