@@ -41,12 +41,14 @@
  <<propagators>>
 <propagator_loop>
 <back>  <<propagator>>
+   <<id>><propagator_index><</id>>
    <<mass>>m<field><</mass>>
    <<momentum>><momentum><</momentum>>
    <<field>><field><</field>>
-   <<id>><propagator_index><</id>>
-   <<from>><dual-vertex_index><</from>>
-   <<to>><vertex_index><</to>>
+   <<dual_field>><dual-field><</dual_field>>
+   <<begin>><field_index><</begin>>
+   <<end>><dual-field_index><</end>>
+   <<sign>><field_sign><</sign>>
   <</propagator>>
 <end><back>
  <</propagators>>
@@ -55,6 +57,7 @@
 <vertex_loop>
 <back>  <<vertex>>
    <<id>><vertex_index><</id>>   
+   <<num>><vertex_degree><</num>>
    <<type>><ray_loop><field>,<end><back><</type>>
    <<fields>><ray_loop><field_index>,<end><back><</fields>>
    <<momenta>><ray_loop><momentum>,<end><back><</momenta>>
