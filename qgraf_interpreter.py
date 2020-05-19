@@ -50,7 +50,8 @@ class qgraf_info:
 
   def draw_incoming(self, file, dictionary):
     for k,v in self.incoming.items():
-      file.write("\n  in{} [particle={}] -- [ {} ] v{},".format(abs(k),extra_translate(v.label),dictionary[v.label],self.vertex[k]))
+      file.write("\n  in{} [particle={}, desired at = {{(-1,{})}}] -- [ {} ] v{},".format(abs(k),extra_translate(v.label),abs(k),dictionary[v.label],self.vertex[k]))
+    
 
   def draw_vertices(self, file, dictionary):
     for k,v in self.vertex.items():
@@ -67,16 +68,11 @@ class qgraf_info:
 
   def draw_outgoing(self, file, dictionary):
     for k,v in self.outgoing.items():
-      file.write("\n  v{}  -- [ {} ] out{} [particle={}],".format(self.vertex[k],dictionary[v.label],abs(k),extra_translate(v.label)))
+      file.write("\n  v{}  -- [ {} ] out{} [particle={}, desired at = {{(1,{})}}],".format(self.vertex[k],dictionary[v.label],abs(k),extra_translate(v.label),abs(k)))
   
 
   def draw(self, file, dictionary):
-    if len(self.incoming) > 1:
-      file.write("\n" + self.sign + "\\feynmandiagram[small, vertical = in1 to in3 ]{")
-    elif len(self.outgoing) > 1:
-      file.write("\n" + self.sign + "\\feynmandiagram[small, vertical = out2 to out4 ]{")
-    else:
-      file.write("\n" + self.sign + "\\feynmandiagram[small, horizontal = in1 to out2 ]{")
+    file.write("\n" + self.sign + "\\feynmandiagram[small]{")
     #This ensures in and out are aligned (hopefully)
     #No worries because there should be at least one incoming and one outcoming particle
     self.draw_incoming(file, dictionary)
