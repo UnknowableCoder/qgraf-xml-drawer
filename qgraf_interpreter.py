@@ -50,7 +50,10 @@ class qgraf_info:
 
   def draw_incoming(self, file, dictionary):
     for k,v in self.incoming.items():
-      file.write("\n  in{} [particle={}, desired at = {{(-1,{})}}] -- [ {} ] v{},".format(abs(k),extra_translate(v.label),abs(k),dictionary[v.label],self.vertex[k]))
+      file.write("\n  in{} [particle={}, desired at = {{(-2,{})}}] -- [ {} ] v{},".format(abs(k),extra_translate(v.label),abs(k)//2+1,dictionary[v.label],self.vertex[k]))
+      #Since incoming particles are -1, -3, -5, -7 (...),
+      #we integer-divide |index| by 2 so it becomes 0, 1, 2, 3 (...)
+      #and add 1 for consistency with the outgoing
     
 
   def draw_vertices(self, file, dictionary):
@@ -68,11 +71,13 @@ class qgraf_info:
 
   def draw_outgoing(self, file, dictionary):
     for k,v in self.outgoing.items():
-      file.write("\n  v{}  -- [ {} ] out{} [particle={}, desired at = {{(1,{})}}],".format(self.vertex[k],dictionary[v.label],abs(k),extra_translate(v.label),abs(k)))
+      file.write("\n  v{}  -- [ {} ] out{} [particle={}, desired at = {{(2,{})}}],".format(self.vertex[k],dictionary[v.label],abs(k),extra_translate(v.label),abs(k)//2))
+      #Since outgoing particles are -2, -4, -6, -8 (...),
+      #we just integer-divide |index| by 2 to get 1, 2, 3 ,4 (...)
   
 
   def draw(self, file, dictionary):
-    file.write("\n" + self.sign + "\\feynmandiagram[small]{")
+    file.write("\n" + self.sign + "\\feynmandiagram[medium]{")
     #This ensures in and out are aligned (hopefully)
     #No worries because there should be at least one incoming and one outcoming particle
     self.draw_incoming(file, dictionary)
